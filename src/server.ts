@@ -1,33 +1,35 @@
 import { Server } from "http";
+import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
 
 let server: Server;
 
-// ✅ সার্ভার শুরু করার জন্য ফাংশন
+// Function to start the server
 const startServer = async () => {
   try {
+    await mongoose.connect(envVars.DB_URL);
     console.log("✅ Database connected successfully!");
 
-    // ✅ সার্ভার শুরু করা হচ্ছে
+    // Starting the server
     server = app.listen(5000, () => {
       console.log(`✅ Server is running on port ${envVars.PORT}`);
     });
   } catch (error) {
-    // ❌ ডাটাবেস সংযোগ বা সার্ভার শুরুতে কোনো ত্রুটি হলে লগ করবে
+    // Logging errors if there's an issue with database connection or server startup
     console.error("❌ Error while connecting to DB or starting server:", error);
   }
 };
 
-// ✅ ফাংশন কল করে সার্ভার চালু করা
+// Call the function to start the server
 startServer();
 
-// ✅ SIGTERM সিগনাল হ্যান্ডল করা (সাধারণত ডিপ্লয়মেন্টে সার্ভার বন্ধের জন্য)
+// Handling SIGTERM signal (usually for server shutdown during deployment)
 process.on("SIGTERM", () => {
-  console.log("SIGTERM signal recived...... Server shutting down,,,,,");
+  console.log("SIGTERM signal received... Server shutting down...");
 
   if (server) {
-    // ✅ সার্ভার বন্ধ করে প্রক্রিয়া থেকে বের হওয়া
+    // Closing the server and exiting the process
     server.close(() => {
       process.exit(1);
     });
@@ -35,12 +37,12 @@ process.on("SIGTERM", () => {
   process.exit(1);
 });
 
-// ✅ SIGINT সিগনাল হ্যান্ডল করা (Ctrl+C চাপলে কাজ করে)
+// Handling SIGINT signal (Ctrl+C pressed)
 process.on("SIGINT", () => {
-  console.log("SIGINT signal recived...... Server shutting down,,,,,");
+  console.log("SIGINT signal received... Server shutting down...");
 
   if (server) {
-    // ✅ সার্ভার বন্ধ করে প্রক্রিয়া থেকে বের হওয়া
+    // Closing the server and exiting the process
     server.close(() => {
       process.exit(1);
     });
@@ -48,15 +50,12 @@ process.on("SIGINT", () => {
   process.exit(1);
 });
 
-// ✅ কোনো প্রমিস ভুলে ক্যাচ না করলে (Unhandled Promise Rejection) হ্যান্ডল করা
+// Handling unhandled promise rejections
 process.on("unhandledRejection", err => {
-  console.log(
-    "unhandled Rejection detected...... Server shutting down,,,,,",
-    err
-  );
+  console.log("Unhandled Rejection detected... Server shutting down...", err);
 
   if (server) {
-    // ✅ সার্ভার বন্ধ করে প্রক্রিয়া থেকে বের হওয়া
+    // Closing the server and exiting the process
     server.close(() => {
       process.exit(1);
     });
@@ -64,15 +63,12 @@ process.on("unhandledRejection", err => {
   process.exit(1);
 });
 
-// ✅ কোনো কোডে ভুল (Uncaught Exception) হলে হ্যান্ডল করা
+// Handling uncaught exceptions
 process.on("uncaughtException", err => {
-  console.log(
-    "uncaught Exception detected...... Server shutting down,,,,,",
-    err
-  );
+  console.log("Uncaught Exception detected... Server shutting down...", err);
 
   if (server) {
-    // ✅ সার্ভার বন্ধ করে প্রক্রিয়া থেকে বের হওয়া
+    // Closing the server and exiting the process
     server.close(() => {
       process.exit(1);
     });
@@ -80,6 +76,7 @@ process.on("uncaughtException", err => {
   process.exit(1);
 });
 
-// ✅ উদাহরণস্বরূপ ইচ্ছাকৃত ত্রুটি:
+// Example of intentional error for demonstration
 // Promise.reject(new Error("I forgot to catch this promise"));
 // throw new Error("I forgot to handle this local error");
+// startServer();
