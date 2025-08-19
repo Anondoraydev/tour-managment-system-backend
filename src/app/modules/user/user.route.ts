@@ -17,5 +17,11 @@ router.get(
   chackAuth(Role.SUPER_ADMIN, Role.ADMIN),
   UserControllers.getAllUsers
 );
+router.patch(
+  "/:id",
+  chackAuth(...Object.values(Role)),
+  UserControllers.updatedUser
+);
+//api/v1/user/:id
 
 export const UserRoutes = router;
