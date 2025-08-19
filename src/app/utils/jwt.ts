@@ -11,7 +11,7 @@ export const genarateToken = (
   return token;
 };
 
-export const varyfyTokeen = (token: string, secret: string) => {
+export const varyfyToken = (token: string, secret: string) => {
   const verifyToken = jwt.verify(token, secret);
   return verifyToken;
 };
