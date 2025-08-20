@@ -38,6 +38,26 @@ const createUser = catchAsync(
   }
 );
 
+const updatedUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    // const token = req.headers.authorization;
+    // const veryfiedToken = varyfyToken(
+    //   token as string,
+    //   envVars.JWT_ACCESS_SECRET
+    // ) as JwtPayload;
+
+    const veryfiedToken = req.user;
+
+    const payload = req.body;
+    const user = await UserService.updateUaer(userId, payload, veryfiedToken);
+
+    res.status(httpStatus.CREATED).json({
+      message: "User Updated successfully",
+      user,
+    });
+  }
+);
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await UserService.getAllUsers();
@@ -62,6 +82,7 @@ const getAllUsers = catchAsync(
 export const UserControllers = {
   createUser,
   getAllUsers,
+  updatedUser,
 };
 
 //routes matching -> controller -> service -> model -> DB
