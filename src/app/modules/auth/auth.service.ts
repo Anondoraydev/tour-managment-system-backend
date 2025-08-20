@@ -23,7 +23,6 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
   if (!isPasswordMatch) {
     throw new AppError(httpsStatus.BAD_REQUEST, "Password does not match");
   }
-
   const jwtPayload = {
     userId: isUserExist._id,
     email: isUserExist.email,
