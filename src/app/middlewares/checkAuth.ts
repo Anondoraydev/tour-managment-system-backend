@@ -25,7 +25,7 @@ export const chackAuth =
         throw new AppError(403, "Your are not authorized to view all routes");
       }
 
-      console.log(veryfiedToken);
+      req.user = veryfiedToken;
 
       next();
     } catch (error) {

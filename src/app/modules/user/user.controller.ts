@@ -2,10 +2,7 @@
 
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken";
-import { envVars } from "../../config/env";
 import { catchAsync } from "../../utils/catchAsync";
-import { varyfyToken } from "../../utils/jwt";
 import { sendResponse } from "../../utils/sendResponse";
 import { UserService } from "./user.service";
 
@@ -44,11 +41,14 @@ const createUser = catchAsync(
 const updatedUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.id;
-    const token = req.headers.authorization;
-    const veryfiedToken = varyfyToken(
-      token as string,
-      envVars.JWT_ACCESS_SECRET
-    ) as JwtPayload;
+    // const token = req.headers.authorization;
+    // const veryfiedToken = varyfyToken(
+    //   token as string,
+    //   envVars.JWT_ACCESS_SECRET
+    // ) as JwtPayload;
+
+    const veryfiedToken = req.user;
+
     const payload = req.body;
     const user = await UserService.updateUaer(userId, payload, veryfiedToken);
 
