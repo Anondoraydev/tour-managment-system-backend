@@ -98,8 +98,7 @@ const getAllUsers = async () => {
       total: totalUsers,
     },
   };
-};
-
+}; 
 export const UserService = {
   createUser,
   getAllUsers,
