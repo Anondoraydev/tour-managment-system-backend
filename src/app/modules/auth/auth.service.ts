@@ -90,7 +90,6 @@ const resetPassword = async (
   );
 
   user!.save();
-
 };
 
 export const AuthService = {
