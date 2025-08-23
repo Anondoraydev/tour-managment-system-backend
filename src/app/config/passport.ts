@@ -59,3 +59,23 @@ passport.use(
 //Bridge == google -> user db store -> token
 // Costom -> email ,password , role: USER, name:... -> register -> DB -> 1 user create
 //Google -> req -> google -> success -> successful:jwt token : Role, email -> DB - store ->  token - api access
+
+passport.serializeUser(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (user: any, done: (err: any, id?: unknown) => void) => {
+    done(null, user._id);
+  }
+);
+
+passport.deserializeUser(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (id: string, done: (err: any, user?: any) => void) => {
+    try {
+      const user = User.findById(id);
+      done(null, user);
+    } catch (error) {
+      console.log(error)
+      done(error);
+    }
+  }
+)
