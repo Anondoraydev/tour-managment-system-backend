@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
+import passport from "passport";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
 import { catchAsync } from "../../utils/catchAsync";
@@ -12,7 +13,44 @@ import { AuthService } from "./auth.service";
 
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const loginInfo = await AuthService.credentialsLogin(req.body);
+    // const loginInfo = await AuthService.credentialsLogin(req.body);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    passport.authenticate("local", async (err: any, user: any, info: any) => {
+      if (err) {
+        // ✅✅✅✅
+        // return next(err);
+        return next(new AppError(401, err));
+
+        // ❌❌❌❌
+        //thow new AppError(401,err));
+        //next(err);
+        // return new AppError(401, err);
+      }
+
+      if (!user) {
+        // return new AppError(401, info.message);
+        return next(new AppError(401, info.message));
+      }
+
+      const userToken = await createdUserToken(user);
+
+      delete user.toObject().password;
+      const { password: pass, ...rest } = user.toObject();
+
+      setAuthCookie(res, userToken);
+
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: " User logged in successfully",
+        data: {
+          accessToken: userToken.accessToken,
+          refreshToken: userToken.refreshToken,
+          user: rest,
+        },
+      });
+    })(req, res, next);
 
     // res.cookie("accessToken", loginInfo.accessToken, {
     //   httpOnly: true,
@@ -23,15 +61,6 @@ const credentialsLogin = catchAsync(
     //   httpOnly: true,
     //   secure: false,
     // });
-
-    setAuthCookie(res, loginInfo);
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: " User logged in successfully",
-      data: loginInfo,
-    });
   }
 );
 const getNewAccessToken = catchAsync(

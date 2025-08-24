@@ -19,19 +19,30 @@ passport.use(
     async (email: string, password: string, done) => {
       try {
         const isUserExist = await User.findOne({ email });
+
+        // if (!isUserExist) {
+        //   return done(null, false, { message: "User does not exist" });
+        // }
+
         if (!isUserExist) {
-          return done(null, false, { message: "User does not exist" });
+          return done("User does not exist");
         }
 
         const isGoogleAuthonticated = isUserExist.auths.some(
           providerObjects => providerObjects.provider == "google"
         );
 
-        if (isGoogleAuthonticated) {
-          return done(null, false, {
-            message:
-              "You have authenticated through Google. So if you want to login with credentials then logout from google . and set a password for your gmail and then you can login with email and password",
-          });
+        // if (isGoogleAuthonticated) {
+        //   return done(null, false, {
+        //     message:
+        //       "You have authenticated through Google. So if you want to login with credentials then logout from google . and set a password for your gmail and then you can login with email and password",
+        //   });
+        // }
+
+        if (isGoogleAuthonticated && !isUserExist.password) {
+          return done(
+            "You have authenticated through Google. So if you want to login with credentials then logout from google . and set a password for your gmail and then you can login with email and password"
+          );
         }
 
         const isPasswordMatch = await bcryptjs.compare(
