@@ -7,6 +7,25 @@ export const createUserZodSchema = z.object({
     .min(2, { message: "Name must be at least 2 characters long" })
     .max(50, { message: "Name must be at most 50 characters long" }),
 
+  // name: z.object({
+  //   firstName: z
+  //     .string({ invalid_type_error: "Name must be a string" })
+  //     .min(2, { message: "Name must be at least 2 characters long" })
+  //     .max(50, { message: "Name must be at most 50 characters long" }),
+
+  //   lastName: z.object({
+  //     nickName: z
+  //       .string({ invalid_type_error: "Name must be a string" })
+  //       .min(2, { message: "Name must be at least 2 characters long" })
+  //       .max(50, { message: "Name must be at most 50 characters long" }),
+
+  //     surName: z
+  //       .string({ invalid_type_error: "Name must be a string" })
+  //       .min(2, { message: "Name must be at least 2 characters long" })
+  //       .max(50, { message: "Name must be at most 50 characters long" }),
+  //   }),
+  // }),
+
   email: z
     .string({ invalid_type_error: "Email must be a string" })
     .email({ message: "Invalid email address" }),
@@ -27,7 +46,8 @@ export const createUserZodSchema = z.object({
   phone: z
     .string()
     .regex(/^(\+?88)?01[3-9]\d{8}$/, {
-      message: "Invalid Bangladesh phone number",
+      message:
+        "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXX or 01XXXXXXXXX",
     })
     .optional(),
 
