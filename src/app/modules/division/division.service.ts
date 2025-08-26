@@ -1,14 +1,12 @@
 import { IDivision } from "./devistion.inferface";
 import { Division } from "./devistion.model";
 
+
 const createDivision = async (payload: IDivision) => {
-  const baseSlug = payload.name.toLowerCase().split(" ").join("-");
-  const slug = `${baseSlug}-division`;
-  console.log(slug);
   const existingDivision = await Division.findOne({ name: payload.name });
-//   if (existingDivision) {
-//     throw new Error("A division with this name already exists.");
-//   }
+  if (existingDivision) {
+    throw new Error("A division with this name already exists.");
+  }
 
   // const baseSlug = payload.name.toLowerCase().split(" ").join("-")
   // let slug = `${baseSlug}-division`
@@ -20,9 +18,9 @@ const createDivision = async (payload: IDivision) => {
 
   // payload.slug = slug;
 
-//   const division = await Division.create(payload);
+  const division = await Division.create(payload);
 
-  return {};
+  return division;
 };
 
 const getAllDivisions = async () => {

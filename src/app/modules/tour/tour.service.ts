@@ -4,20 +4,20 @@ import { ITour, ITourType } from "./tour.interfaces";
 import { Tour, TourType } from "./tour.model";
 
 const createTour = async (payload: ITour) => {
-  const existingTour = await Tour.findOne({ title: payload.titele });
+  const existingTour = await Tour.findOne({ title: payload.title });
   if (existingTour) {
     throw new Error("A tour with this title already exists.");
   }
 
-  // const baseSlug = payload.title.toLowerCase().split(" ").join("-")
-  // let slug = `${baseSlug}`
+  const baseSlug = payload.title.toLowerCase().split(" ").join("-");
+  let slug = `${baseSlug}`;
 
-  // let counter = 0;
-  // while (await Tour.exists({ slug })) {
-  //     slug = `${slug}-${counter++}` // dhaka-division-2
-  // }
+  let counter = 0;
+  while (await Tour.exists({ slug })) {
+    slug = `${slug}-${counter++}`; // dhaka-division-2
+  }
 
-  // payload.slug = slug;
+  payload.slug = slug;
 
   const tour = await Tour.create(payload);
 
@@ -92,6 +92,9 @@ const createTour = async (payload: ITour) => {
 // };
 
 const getAllTours = async (query: Record<string, string>) => {
+ 
+
+
   const queryBuilder = new QueryBuilder(Tour.find(), query);
 
   const tours = await queryBuilder
