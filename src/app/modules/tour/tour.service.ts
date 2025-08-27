@@ -91,10 +91,7 @@ const createTour = async (payload: ITour) => {
 //     }
 // };
 
-const getAllTours = async (query: Record<string, string>) => {
- 
-
-
+const getAllTours = async (query: Record<string, string>) => {  
   const queryBuilder = new QueryBuilder(Tour.find(), query);
 
   const tours = await queryBuilder
@@ -141,10 +138,12 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
   return updatedTour;
 };
 
+// delete isUserExist.password
 const deleteTour = async (id: string) => {
   return await Tour.findByIdAndDelete(id);
 };
 
+// Tour type service
 const createTourType = async (payload: ITourType) => {
   const existingTourType = await TourType.findOne({ name: payload.name });
 
