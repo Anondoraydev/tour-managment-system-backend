@@ -1,86 +1,93 @@
+/* eslint-disable no-console */
 import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
+import { connectRedis } from "./app/config/redis.config";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 
-// Function to start the server
+
 const startServer = async () => {
-  try {
-    await mongoose.connect(envVars.DB_URL);
-    console.log("✅ Database connected successfully!");
+    try {
+        await mongoose.connect(envVars.DB_URL)
 
-    // Starting the server
-    server = app.listen(5000, () => {
-      console.log(`✅ Server is running on port ${envVars.PORT}`);
-    });
-  } catch (error) {
-    // Logging errors if there's an issue with database connection or server startup
-    console.error("❌ Error while connecting to DB or starting server:", error);
-  }
-};
+        console.log("Connected to DB!!");
 
-// Call the function to start the server
+        server = app.listen(envVars.PORT, () => {
+            console.log(`Server is listening to port ${envVars.PORT}`);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 (async () => {
-  await startServer();
-  await seedSuperAdmin();
-})();
+    await connectRedis()
+    await startServer()
+    await seedSuperAdmin()
+})()
 
-// Handling SIGTERM signal (usually for server shutdown during deployment)
 process.on("SIGTERM", () => {
-  console.log("SIGTERM signal received... Server shutting down...");
+    console.log("SIGTERM signal recieved... Server shutting down..");
 
-  if (server) {
-    // Closing the server and exiting the process
-    server.close(() => {
-      process.exit(1);
-    });
-  }
-  process.exit(1);
-});
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        });
+    }
 
-// Handling SIGINT signal (Ctrl+C pressed)
+    process.exit(1)
+})
+
 process.on("SIGINT", () => {
-  console.log("SIGINT signal received... Server shutting down...");
+    console.log("SIGINT signal recieved... Server shutting down..");
 
-  if (server) {
-    // Closing the server and exiting the process
-    server.close(() => {
-      process.exit(1);
-    });
-  }
-  process.exit(1);
-});
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        });
+    }
 
-// Handling unhandled promise rejections
-process.on("unhandledRejection", err => {
-  console.log("Unhandled Rejection detected... Server shutting down...", err);
+    process.exit(1)
+})
 
-  if (server) {
-    // Closing the server and exiting the process
-    server.close(() => {
-      process.exit(1);
-    });
-  }
-  process.exit(1);
-});
 
-// Handling uncaught exceptions
-process.on("uncaughtException", err => {
-  console.log("Uncaught Exception detected... Server shutting down...", err);
+process.on("unhandledRejection", (err) => {
+    console.log("Unhandled Rejecttion detected... Server shutting down..", err);
 
-  if (server) {
-    // Closing the server and exiting the process
-    server.close(() => {
-      process.exit(1);
-    });
-  }
-  process.exit(1);
-});
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        });
+    }
 
-// Example of intentional error for demonstration
-// Promise.reject(new Error("I forgot to catch this promise"));
-// throw new Error("I forgot to handle this local error");
-// startServer();
+    process.exit(1)
+})
+
+process.on("uncaughtException", (err) => {
+    console.log("Uncaught Exception detected... Server shutting down..", err);
+
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        });
+    }
+
+    process.exit(1)
+})
+
+// Unhandler rejection error
+// Promise.reject(new Error("I forgot to catch this promise"))
+
+// Uncaught Exception Error
+// throw new Error("I forgot to handle this local erro")
+
+
+/**
+ * unhandled rejection error
+ * uncaught rejection error
+ * signal termination sigterm
+ */
+

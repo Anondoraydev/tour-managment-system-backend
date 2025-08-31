@@ -1,28 +1,20 @@
 import { Router } from "express";
-import { chackAuth } from "../../middlewares/checkAuth";
+import { checkAuth } from "../../middlewares/checkAuth";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { UserControllers } from "./user.controller";
-import { Role } from "./user.interfaces";
-import { createUserZodSchema, updateUserZodSchema } from "./user.validation";
+import { Role } from "./user.interface";
+import { updateUserZodSchema } from "./user.validation";
 
-const router = Router();
+const router = Router()
 
-router.post(
-  "/register",
-  validateRequest(createUserZodSchema),
-  UserControllers.createUser
-);
-router.get(
-  "/all-users",
-  chackAuth(Role.SUPER_ADMIN, Role.ADMIN),
-  UserControllers.getAllUsers
-);
-router.patch(
-  "/:id",
-  validateRequest(updateUserZodSchema),
-  chackAuth(...Object.values(Role)),
-  UserControllers.updatedUser
-);
-//api/v1/user/:id
 
-export const UserRoutes = router;
+
+router.post("/register",
+    // validateRequest(createUserZodSchema),
+    UserControllers.createUser)
+router.get("/all-users", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), UserControllers.getAllUsers)
+router.get("/me", checkAuth(...Object.values(Role)), UserControllers.getMe)
+router.get("/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), UserControllers.getSingleUser)
+router.patch("/:id", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserControllers.updateUser)
+// /api/v1/user/:id
+export const UserRoutes = router
