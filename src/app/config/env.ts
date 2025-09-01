@@ -22,14 +22,7 @@ interface EnvConfig {
         STORE_ID: string,
         STORE_PASS: string,
         SSL_PAYMENT_API: string,
-        SSL_VALIDATION_API: string,
-        SSL_SUCCESS_FRONTEND_URL: string,
-        SSL_FAIL_FRONTEND_URL: string,
-        SSL_CANCEL_FRONTEND_URL: string,
-        SSL_SUCCESS_BACKEND_URL: string,
-        SSL_FAIL_BACKEND_URL: string,
-        SSL_CANCEL_BACKEND_URL: string,
-        SSL_IPN_URL: string
+        SSL_VALIDATION_API: string, 
     };
     CLOUDINARY: {
         CLOUDINARY_CLOUD_NAME: string;
