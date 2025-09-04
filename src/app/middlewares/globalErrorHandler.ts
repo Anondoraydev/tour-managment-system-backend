@@ -35,7 +35,6 @@ export const globalErrorHandler = async (err: any, req: Request, res: Response, 
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message
     }
-    
     // Object ID error / Cast Error
     else if (err.name === "CastError") {
         const simplifiedError = handleCastError(err)
