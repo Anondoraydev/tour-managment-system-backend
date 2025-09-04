@@ -115,7 +115,7 @@ const forgotPassword = async (email: string) => {
     })
 
     /**
-     * http://localhost:5173/reset-password?id=687f310c724151eb2fcf0c41&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODdmMzEwYzcyNDE1MWViMmZjZjBjNDEiLCJlbWFpbCI6InNhbWluaXNyYXI2QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzMTY2MTM3LCJleHAiOjE3NTMxNjY3Mzd9.LQgXBmyBpEPpAQyPjDNPL4m2xLF4XomfUPfoxeG0MKg
+     * http://localhost:5173/reset-password?id=68b869114101c7dcef7f3907&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGI4NjkxMTQxMDFjN2RjZWY3ZjM5MDciLCJlbWFpbCI6ImFub25kbzU1NEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1Njk5NDEzNiwiZXhwIjoxNzU2OTk0NzM2fQ.fPQYuqeDXgT8mpr5hts1L8fKYPtqMijVSBgBK_7_le8
      */
 }
 const setPassword = async (userId: string, plainPassword: string) => {
