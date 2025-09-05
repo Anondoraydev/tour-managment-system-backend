@@ -11,7 +11,9 @@ export interface IInvoiceData {
   totalAmount: number;
 }
 
-export const generatePdf = async (invoiceData: IInvoiceData): Promise<Buffer<ArrayBufferLike>> => {
+export const generatePdf = async (
+  invoiceData: IInvoiceData
+): Promise<Buffer<ArrayBufferLike>> => {
   try {
     return new Promise((resolve, reject) => {
       const doc = new PDFDocument({ size: "A4", margin: 50 });
@@ -21,48 +23,59 @@ export const generatePdf = async (invoiceData: IInvoiceData): Promise<Buffer<Arr
       doc.on("end", () => resolve(Buffer.concat(buffer)));
       doc.on("error", (err) => reject(err));
 
-      // ===== HEADER =====
+      // ========= HEADER =========
       doc
-        .fontSize(22)
+        .fontSize(20)
         .font("Helvetica-Bold")
-        .fillColor("#2C3E50")
-        .text("TravelX Tours & Adventures", { align: "center" });
+        .fillColor("#E74C3C")
+        .text("TOUR BOOKING INVOICE", { align: "center" });
 
       doc
         .moveDown(0.5)
-        .fontSize(12)
+        .fontSize(10)
         .font("Helvetica")
-        .fillColor("#7F8C8D")
-        .text("123 Dhaka Street, Bangladesh | Phone: +880-1712345678", {
+        .fillColor("#555")
+        .text("TourX Travel Agency", { align: "center" })
+        .text("123 Main Street, Dhaka, Bangladesh", { align: "center" })
+        .text("Phone: +880-1712345678 | Email: support@tourx.com", {
           align: "center",
         });
 
       doc.moveDown(2);
 
-      // ===== INVOICE TITLE =====
+      // ========= INVOICE INFO =========
       doc
-        .fontSize(18)
+        .fontSize(14)
+        .fillColor("#000")
         .font("Helvetica-Bold")
-        .fillColor("#000000")
-        .text("INVOICE", { align: "center", underline: true });
-
-      doc.moveDown(1.5);
-
-      // ===== TRANSACTION INFO =====
-      doc
-        .fontSize(12)
-        .fillColor("#2C3E50")
-        .text(`Transaction ID : ${invoiceData.transactionId}`)
+        .text(`Invoice No: ${invoiceData.transactionId}`, 50, doc.y)
+        .font("Helvetica")
         .text(
-          `Booking Date : ${invoiceData.bookingDate.toLocaleDateString("en-GB")}`
-        )
-        .text(`Customer : ${invoiceData.userName}`);
+          `Date: ${invoiceData.bookingDate.toLocaleDateString("en-GB")}`,
+          350,
+          doc.y - 14
+        );
+
+      doc.moveDown(1);
+
+      doc
+        .font("Helvetica-Bold")
+        .text("Customer Name:", 50, doc.y)
+        .font("Helvetica")
+        .text(invoiceData.userName, 180, doc.y - 14);
 
       doc.moveDown(1.5);
 
-      // ===== DETAILS BOX =====
+      // ========= BOOKING DETAILS =========
       doc
-        .rect(50, doc.y, 500, 80)
+        .fontSize(13)
+        .font("Helvetica-Bold")
+        .fillColor("#2C3E50")
+        .text("Booking Details")
+        .moveDown(0.5);
+
+      doc
+        .rect(50, doc.y, 500, 70)
         .stroke("#BDC3C7")
         .lineWidth(1);
 
@@ -70,32 +83,31 @@ export const generatePdf = async (invoiceData: IInvoiceData): Promise<Buffer<Arr
       doc
         .font("Helvetica-Bold")
         .fontSize(12)
-        .text("Tour Package", 60, startY)
+        .text("Tour Title", 60, startY)
         .text("Guests", 260, startY)
         .text("Total Amount", 400, startY);
 
-      doc.moveDown(1);
       doc
         .font("Helvetica")
         .fontSize(12)
         .text(invoiceData.tourTitle, 60, startY + 20)
         .text(String(invoiceData.guestCount), 260, startY + 20)
-        .text(`$${invoiceData.totalAmount.toFixed(2)}`, 400, startY + 20);
+        .text(`TK ${invoiceData.totalAmount.toFixed(2)}`, 400, startY + 20);
 
       doc.moveDown(6);
 
-      // ===== FOOTER / THANK YOU =====
+      // ========= THANK YOU / FOOTER =========
       doc
-        .fontSize(14)
+        .fontSize(12)
         .font("Helvetica-Oblique")
         .fillColor("#16A085")
-        .text("Thank you for booking with TravelX Tours!", { align: "center" });
+        .text("Thank you for booking with TourX!", { align: "center" });
 
       doc
         .moveDown(2)
         .fontSize(10)
         .fillColor("#7F8C8D")
-        .text("This is a system generated invoice, no signature required.", {
+        .text("This is a system-generated invoice, no signature required.", {
           align: "center",
         });
 
