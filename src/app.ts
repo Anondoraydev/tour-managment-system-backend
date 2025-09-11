@@ -9,7 +9,8 @@ import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import { router } from "./app/routes";
 
-const app = express() 
+const app = express()
+
 
 app.use(expressSession({
     secret: envVars.EXPRESS_SESSION_SECRET,

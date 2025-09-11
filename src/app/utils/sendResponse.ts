@@ -5,7 +5,8 @@ interface TMeta {
     limit: number;
     totalPage: number;
     total: number
-} 
+}
+
 
 interface TResponse<T> {
     statusCode: number;
