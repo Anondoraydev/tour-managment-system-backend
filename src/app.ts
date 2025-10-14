@@ -28,6 +28,7 @@ app.use(cors({
     credentials: true
 }))
 
+
 app.use("/api/v1", router)
 
 app.get("/", (req: Request, res: Response) => {
